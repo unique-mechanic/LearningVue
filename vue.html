@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div id="app">
+        <p>
+            <input type="text" v-model="greeting"> 
+        </p>
+        <p>
+            {{ greeting }} ({{ greeting.length }})
+        </p>
+
+    </div>
+
+    <div class="bg-gray-900">
+        <blockquote class="text-center text-2xl font-semibold text-gray-900 italic dark:text-white">
+            When you look
+            <span class="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-3 before:bg-pink-500">
+              <span class="relative text-white dark:text-gray-950">annoyed</span>
+            </span>
+            all the time, people think that you're busy.
+          </blockquote>
+
+
+    </div>
+
+    <script>
+        //v-model within p section, binds the value of the greeting and also listens to the value of the greeting.
+        Vue.createApp({
+            data(){
+                return {
+                    greeting: 'Hello World'
+                };
+            },
+
+            //this method also works to 
+            mounted(){
+                setTimeout(() => {
+                    this.greeting = 'Changed';
+                }, 3000);
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
+
