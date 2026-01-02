@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js Components & Props</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes spinner {
+            to {transform: rotate(360deg);}
+        }
+
+        .is-loading {
+            color: transparent;
+        }
+        
+        .is-loading:before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            border-top-color: #000;
+            animation: spinner .6s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-900 via-amber-900 to-orange-900 min-h-screen">
+    <div id="app" class="flex items-center justify-center min-h-screen px-4 py-8">
+        <div class="w-full max-w-5xl">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-white mb-2">Vue.js Components & Props</h1>
+                <p class="text-amber-200">Learn component reusability and data passing</p>
+            </div>
+
+            <!-- Button Examples -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-amber-300 border-opacity-20 mb-8">
+                <h2 class="text-2xl font-bold text-purple-800 mb-6">Button Components</h2>
+                
+                <div class="space-y-6">
+                    <!-- Example 1: Different Button Types -->
+                    <div>
+                        <p class="text-amber-100 mb-3 text-sm">Different button types using the same component:</p>
+                        <div class="flex gap-3 flex-wrap">
+                            <app-button type="primary">Primary Button</app-button>
+                            <app-button type="secondary">Secondary Button</app-button>
+                            <app-button type="muted">Muted Button</app-button>
+                        </div>
+                    </div>
+
+                    <!-- Example 2: Loading State -->
+                    <div>
+                        <p class="text-amber-100 mb-3 text-sm">Loading state with processing prop:</p>
+                        <div class="flex gap-3 flex-wrap">
+                            <app-button type="primary" :processing="isProcessing" @click="toggleProcessing">
+                                {{ isProcessing ? 'Loading...' : 'Click to Load' }}
+                            </app-button>
+                            <app-button type="secondary" processing>Disabled State</app-button>
+                        </div>
+                    </div>
+
+                    <!-- Example 3: Using Slots -->
+                    <div>
+                        <p class="text-amber-100 mb-3 text-sm">Buttons with icons (using slots):</p>
+                        <div class="flex gap-3 flex-wrap">
+                            <app-button type="primary">✅ Save</app-button>
+                            <app-button type="secondary">🗑️ Delete</app-button>
+                            <app-button type="primary">📝 Edit</app-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Explanation -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Props Explanation -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-amber-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">What are Props?</h2>
+                    <div class="space-y-3 text-amber-100 text-sm">
+                        <p>Props are custom attributes that pass data from parent to child components.</p>
+                        <div class="bg-amber-900 bg-opacity-30 border border-amber-400 rounded p-3">
+                            <p class="text-amber-200 font-bold mb-2">Example:</p>
+                            <code class="text-amber-100 text-xs">&lt;app-button type="primary"&gt;</code>
+                            <p class="text-amber-300 text-xs mt-2">Here, "type" is a prop with value "primary"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slots Explanation -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-amber-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">What are Slots?</h2>
+                    <div class="space-y-3 text-amber-100 text-sm">
+                        <p>Slots allow you to pass content into components.</p>
+                        <div class="bg-amber-900 bg-opacity-30 border border-amber-400 rounded p-3">
+                            <p class="text-amber-200 font-bold mb-2">Example:</p>
+                            <code class="text-amber-100 text-xs">&lt;app-button&gt;Click Me&lt;/app-button&gt;</code>
+                            <p class="text-amber-300 text-xs mt-2">"Click Me" is placed in the slot</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Structure -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-amber-300 border-opacity-20 mb-8">
+                <h2 class="text-2xl font-bold text-purple-800 mb-6">AppButton Component Structure</h2>
+                <div class="space-y-4">
+                    <div class="bg-amber-900 bg-opacity-30 border border-amber-400 rounded-lg p-4">
+                        <p class="text-amber-200 font-bold text-sm mb-2">Props:</p>
+                        <ul class="text-amber-100 text-sm space-y-1 ml-4">
+                            <li>✓ <span class="font-semibold">type</span> - 'primary' | 'secondary' | 'muted'</li>
+                            <li>✓ <span class="font-semibold">processing</span> - Boolean (true/false)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-amber-900 bg-opacity-30 border border-amber-400 rounded-lg p-4">
+                        <p class="text-amber-200 font-bold text-sm mb-2">Features:</p>
+                        <ul class="text-amber-100 text-sm space-y-1 ml-4">
+                            <li>✓ Dynamic styling with :class binding</li>
+                            <li>✓ Slot content for flexible button text</li>
+                            <li>✓ Loading animation with is-loading state</li>
+                            <li>✓ Disabled state when processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Concepts Summary -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-amber-300 border-opacity-20">
+                <h3 class="text-xl font-bold text-white mb-4">Key Component Concepts:</h3>
+                <ul class="text-amber-100 space-y-2 text-sm">
+                    <li>✓ <span class="font-semibold">Components</span> - Reusable pieces of UI</li>
+                    <li>✓ <span class="font-semibold">Props</span> - Pass data from parent to child</li>
+                    <li>✓ <span class="font-semibold">Slots</span> - Pass content into components</li>
+                    <li>✓ <span class="font-semibold">Dynamic Classes</span> - Apply styles based on props</li>
+                    <li>✓ <span class="font-semibold">Emits</span> - Send events from child to parent</li>
+                    <li>✓ <span class="font-semibold">Default Props</span> - Set fallback values</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+    import App from "./js/components/App.js"
+    Vue.createApp(App, {
+        data() {
+            return {
+                isProcessing: false
+            }
+        },
+        methods: {
+            toggleProcessing() {
+                this.isProcessing = !this.isProcessing;
+                if (this.isProcessing) {
+                    setTimeout(() => {
+                        this.isProcessing = false;
+                    }, 2000);
+                }
+            }
+        }
+    }).mount('#app');
+
+</script>
+</body>
+</html>
+
