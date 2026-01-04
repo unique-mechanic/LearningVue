@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js Code Playground</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen">
+    <div id="app" class="min-h-screen py-8 px-4">
+        <!-- Back to Home -->
+        <a href="index.html" class="inline-flex items-center gap-2 text-purple-300 hover:text-purple-100 transition mb-8">
+            <span>←</span>
+            <span>Back to Learning Hub</span>
+        </a>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div class="text-6xl mb-4">🎮</div>
+                <h1 class="text-5xl font-bold text-white mb-2">Vue.js Code Playground</h1>
+                <p class="text-slate-400">Write Vue code and see results instantly</p>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Template Editor -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl border border-purple-400 border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="bg-purple-900 bg-opacity-50 px-6 py-4 border-b border-purple-400 border-opacity-20">
+                        <h2 class="text-xl font-bold text-white">📝 Template</h2>
+                    </div>
+                    <textarea 
+                        v-model="template"
+                        @input="updatePlayground"
+                        class="flex-1 p-6 bg-slate-900 text-green-300 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                        placeholder="Enter your Vue template here..."
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+
+                <!-- Script Editor -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl border border-purple-400 border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="bg-blue-900 bg-opacity-50 px-6 py-4 border-b border-blue-400 border-opacity-20">
+                        <h2 class="text-xl font-bold text-white">⚙️ Script (Vue Logic)</h2>
+                    </div>
+                    <textarea 
+                        v-model="script"
+                        @input="updatePlayground"
+                        class="flex-1 p-6 bg-slate-900 text-green-300 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                        placeholder="Enter your Vue script (data, methods, computed, etc.)"
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- CSS and Buttons -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- CSS Editor -->
+                <div class="lg:col-span-2 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl border border-purple-400 border-opacity-20 overflow-hidden flex flex-col">
+                    <div class="bg-pink-900 bg-opacity-50 px-6 py-4 border-b border-pink-400 border-opacity-20">
+                        <h2 class="text-xl font-bold text-white">🎨 CSS (Optional)</h2>
+                    </div>
+                    <textarea 
+                        v-model="css"
+                        @input="updatePlayground"
+                        class="flex-1 p-6 bg-slate-900 text-green-300 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50"
+                        placeholder="Enter custom CSS..."
+                        spellcheck="false"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="space-y-3">
+                    <button 
+                        @click="resetPlayground"
+                        class="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-105"
+                    >
+                        🔄 Reset
+                    </button>
+                    <button 
+                        @click="showExamples = !showExamples"
+                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-105"
+                    >
+                        💡 {{ showExamples ? 'Hide' : 'Show' }} Examples
+                    </button>
+                    <button 
+                        @click="downloadCode"
+                        class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-105"
+                    >
+                        ⬇️ Download
+                    </button>
+                </div>
+            </div>
+
+            <!-- Examples Dropdown -->
+            <div v-if="showExamples" class="mb-8 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-purple-400 border-opacity-20">
+                <h3 class="text-xl font-bold text-white mb-4">📚 Code Examples</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button 
+                        v-for="example in examples"
+                        :key="example.id"
+                        @click="loadExample(example)"
+                        class="p-4 rounded-lg bg-white bg-opacity-10 border border-purple-400 border-opacity-20 text-left hover:bg-opacity-20 hover:border-opacity-40 transition"
+                    >
+                        <div class="text-2xl mb-2">{{ example.icon }}</div>
+                        <h4 class="text-white font-semibold">{{ example.title }}</h4>
+                        <p class="text-gray-300 text-sm">{{ example.description }}</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl border border-purple-400 border-opacity-20 overflow-hidden">
+                <div class="bg-green-900 bg-opacity-50 px-6 py-4 border-b border-green-400 border-opacity-20">
+                    <h2 class="text-xl font-bold text-white">👁️ Live Preview</h2>
+                </div>
+                <div class="p-6 bg-gradient-to-br from-slate-800 to-slate-900 min-h-96">
+                    <div v-if="error" class="bg-red-900 bg-opacity-40 border border-red-600 text-red-200 px-4 py-3 rounded-lg mb-4">
+                        <p class="font-semibold mb-1">❌ Error:</p>
+                        <p class="text-sm font-mono">{{ error }}</p>
+                    </div>
+                    <div id="playground-output" class="text-white"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    template: `<div class="p-4 bg-blue-100 rounded">
+  <h1 class="text-2xl font-bold mb-4">Hello, Vue! 👋</h1>
+  <p class="mb-4">Count: <strong>{{ count }}</strong></p>
+  <button @click="count++" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+    Click Me!
+  </button>
+</div>`,
+                    script: `data() {
+  return {
+    count: 0
+  };
+}`,
+                    css: `/* Add custom CSS here */
+div {
+  font-family: Arial, sans-serif;
+}`,
+                    error: null,
+                    showExamples: false,
+                    examples: [
+                        {
+                            id: 1,
+                            icon: '🔢',
+                            title: 'Counter App',
+                            description: 'Simple counter with increment/decrement',
+                            template: `<div class="p-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg text-white">
+  <h1 class="text-3xl font-bold mb-4">Counter: {{ count }}</h1>
+  <div class="space-x-4">
+    <button @click="count++" class="bg-white text-blue-600 px-4 py-2 rounded font-bold hover:bg-gray-100">+</button>
+    <button @click="count--" class="bg-white text-blue-600 px-4 py-2 rounded font-bold hover:bg-gray-100">-</button>
+    <button @click="count = 0" class="bg-red-500 px-4 py-2 rounded font-bold hover:bg-red-600">Reset</button>
+  </div>
+</div>`,
+                            script: `data() {
+  return {
+    count: 0
+  };
+}`
+                        },
+                        {
+                            id: 2,
+                            icon: '📋',
+                            title: 'Todo List',
+                            description: 'Dynamic list with add/remove',
+                            template: `<div class="p-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg text-white">
+  <h1 class="text-3xl font-bold mb-4">My Todos</h1>
+  <input v-model="newItem" @keyup.enter="addItem" placeholder="Add a todo..." class="w-full px-4 py-2 rounded mb-4 text-black">
+  <ul class="space-y-2">
+    <li v-for="(item, index) in items" :key="index" class="flex justify-between bg-white bg-opacity-20 p-3 rounded">
+      <span>{{ item }}</span>
+      <button @click="removeItem(index)" class="text-red-300 hover:text-red-100">✕</button>
+    </li>
+  </ul>
+  <p class="text-sm mt-4">Total: {{ items.length }} todos</p>
+</div>`,
+                            script: `data() {
+  return {
+    items: ['Learn Vue', 'Build a project', 'Master it!'],
+    newItem: ''
+  };
+},
+methods: {
+  addItem() {
+    if (this.newItem.trim()) {
+      this.items.push(this.newItem);
+      this.newItem = '';
+    }
+  },
+  removeItem(index) {
+    this.items.splice(index, 1);
+  }
+}`
+                        },
+                        {
+                            id: 3,
+                            icon: '🎨',
+                            title: 'Color Picker',
+                            description: 'Interactive color selector',
+                            template: `<div class="p-6 rounded-lg text-white" :style="{ backgroundColor: selectedColor }">
+  <h1 class="text-3xl font-bold mb-4">Color Picker</h1>
+  <div class="mb-4">
+    <input type="color" v-model="selectedColor" class="w-full h-16 rounded cursor-pointer">
+  </div>
+  <p class="text-2xl font-mono mb-4">{{ selectedColor }}</p>
+  <div class="space-y-2">
+    <button v-for="color in colors" :key="color" @click="selectedColor = color" 
+            class="block w-full px-4 py-2 rounded font-bold"
+            :style="{ backgroundColor: color }">
+      {{ color }}
+    </button>
+  </div>
+</div>`,
+                            script: `data() {
+  return {
+    selectedColor: '#3b82f6',
+    colors: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6']
+  };
+}`
+                        },
+                        {
+                            id: 4,
+                            icon: '⭐',
+                            title: 'Star Rating',
+                            description: 'Interactive rating system',
+                            template: `<div class="p-6 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg text-white text-center">
+  <h1 class="text-3xl font-bold mb-4">Rate This!</h1>
+  <div class="text-6xl mb-4 space-x-2">
+    <span v-for="star in 5" :key="star" 
+          @click="rating = star"
+          @mouseenter="hoverRating = star"
+          @mouseleave="hoverRating = 0"
+          class="inline-block cursor-pointer transition">
+      {{ star <= (hoverRating || rating) ? '⭐' : '☆' }}
+    </span>
+  </div>
+  <p class="text-2xl font-bold">{{ rating }} / 5 stars</p>
+</div>`,
+                            script: `data() {
+  return {
+    rating: 0,
+    hoverRating: 0
+  };
+}`
+                        },
+                        {
+                            id: 5,
+                            icon: '🔍',
+                            title: 'Search Filter',
+                            description: 'Filter items dynamically',
+                            template: `<div class="p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-lg text-white">
+  <h1 class="text-3xl font-bold mb-4">Search Fruits</h1>
+  <input v-model="search" placeholder="Search..." class="w-full px-4 py-2 rounded mb-4 text-black">
+  <ul class="space-y-2">
+    <li v-for="item in filtered" :key="item" class="bg-white bg-opacity-20 p-3 rounded">
+      {{ item }}
+    </li>
+  </ul>
+  <p v-if="filtered.length === 0" class="text-center py-4 text-opacity-75">No results found</p>
+</div>`,
+                            script: `data() {
+  return {
+    search: '',
+    fruits: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig']
+  };
+},
+computed: {
+  filtered() {
+    return this.fruits.filter(f => 
+      f.toLowerCase().includes(this.search.toLowerCase())
+    );
+  }
+}`
+                        },
+                        {
+                            id: 6,
+                            icon: '⏱️',
+                            title: 'Timer',
+                            description: 'Simple countdown timer',
+                            template: `<div class="p-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg text-white text-center">
+  <h1 class="text-3xl font-bold mb-4">Timer</h1>
+  <div class="text-6xl font-mono font-bold mb-4">{{ formattedTime }}</div>
+  <div class="space-x-2">
+    <button @click="start" class="bg-green-500 px-4 py-2 rounded font-bold hover:bg-green-600">Start</button>
+    <button @click="pause" class="bg-yellow-500 px-4 py-2 rounded font-bold hover:bg-yellow-600">Pause</button>
+    <button @click="reset" class="bg-red-500 px-4 py-2 rounded font-bold hover:bg-red-600">Reset</button>
+  </div>
+</div>`,
+                            script: `data() {
+  return {
+    seconds: 0,
+    running: false,
+    interval: null
+  };
+},
+computed: {
+  formattedTime() {
+    const mins = Math.floor(this.seconds / 60);
+    const secs = this.seconds % 60;
+    return \`\${String(mins).padStart(2, '0')}:\${String(secs).padStart(2, '0')}\`;
+  }
+},
+methods: {
+  start() {
+    if (!this.running) {
+      this.running = true;
+      this.interval = setInterval(() => this.seconds++, 1000);
+    }
+  },
+  pause() {
+    this.running = false;
+    clearInterval(this.interval);
+  },
+  reset() {
+    this.seconds = 0;
+    this.running = false;
+    clearInterval(this.interval);
+  }
+}`
+                        }
+                    ]
+                };
+            },
+            methods: {
+                updatePlayground() {
+                    this.error = null;
+                    try {
+                        const outputDiv = document.getElementById('playground-output');
+                        outputDiv.innerHTML = '';
+
+                        // Create a style element for custom CSS
+                        const styleEl = document.createElement('style');
+                        styleEl.textContent = this.css;
+                        document.head.appendChild(styleEl);
+
+                        // Parse and execute the script
+                        let appConfig = { template: this.template };
+                        
+                        // Safely evaluate the script
+                        eval(`
+                            try {
+                                Object.assign(appConfig, {
+                                    ${this.script}
+                                });
+                            } catch(e) {
+                                throw e;
+                            }
+                        `);
+
+                        // Create and mount the app
+                        const app = Vue.createApp(appConfig);
+                        app.mount(outputDiv);
+                    } catch (e) {
+                        this.error = e.message || String(e);
+                        document.getElementById('playground-output').innerHTML = '';
+                    }
+                },
+                resetPlayground() {
+                    this.template = `<div class="p-4 bg-blue-100 rounded">
+  <h1 class="text-2xl font-bold mb-4">Hello, Vue! 👋</h1>
+  <p class="mb-4">Count: <strong>{{ count }}</strong></p>
+  <button @click="count++" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+    Click Me!
+  </button>
+</div>`;
+                    this.script = `data() {
+  return {
+    count: 0
+  };
+}`;
+                    this.css = '';
+                    this.error = null;
+                    this.$nextTick(() => this.updatePlayground());
+                },
+                loadExample(example) {
+                    this.template = example.template;
+                    this.script = example.script;
+                    this.css = '';
+                    this.error = null;
+                    this.$nextTick(() => this.updatePlayground());
+                    this.showExamples = false;
+                },
+                downloadCode() {
+                    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue App</title>
+    <script src="https://unpkg.com/vue@3"><\/script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
+    <style>
+${this.css}
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        Vue.createApp({
+            template: \`${this.template.replace(/`/g, '\\`')}\`,
+            ${this.script}
+        }).mount('#app');
+    <\/script>
+</body>
+</html>`;
+                    
+                    const blob = new Blob([html], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'vue-app.html';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            },
+            mounted() {
+                this.updatePlayground();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

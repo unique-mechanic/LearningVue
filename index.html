@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js Learning Hub</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+    <div id="app">
+        <!-- Navigation Bar -->
+        <nav class="bg-black bg-opacity-40 backdrop-blur-md border-b border-purple-500 border-opacity-30 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center gap-2">
+                        <span class="text-3xl">🚀</span>
+                        <h1 class="text-white text-2xl font-bold">Vue.js Learning Hub</h1>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-purple-300 hover:text-purple-100 transition">Home</a>
+                        <a href="https://vuejs.org" target="_blank" class="text-purple-300 hover:text-purple-100 transition">Vue Docs</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl md:text-6xl font-bold text-white mb-4">Learn Vue.js</h2>
+                <p class="text-xl text-purple-200 mb-6">Master Vue.js concepts with interactive examples and real-world projects</p>
+                <div class="flex justify-center gap-4">
+                    <a href="#basics" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105">Start Learning</a>
+                    <a href="todo.html" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105">Try Todo App</a>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div id="basics" class="mb-16">
+                <h3 class="text-3xl font-bold text-white mb-8">📚 Learning Modules</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Vue Basics -->
+                    <a href="vue.html" class="group">
+                        <div class="bg-gradient-to-br from-blue-900 to-blue-800 rounded-2xl p-8 border border-blue-400 border-opacity-30 hover:border-opacity-50 transition h-full hover:shadow-2xl hover:shadow-blue-500/50">
+                            <div class="text-4xl mb-4">⚡</div>
+                            <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-200 transition">Vue Basics</h4>
+                            <p class="text-blue-200 mb-4">Learn Vue fundamentals including data binding, interpolation, and directives</p>
+                            <div class="text-blue-300 text-sm font-semibold">Topics: Data binding, v-if, v-for, properties →</div>
+                        </div>
+                    </a>
+
+                    <!-- Event Handling -->
+                    <a href="event-handling.html" class="group">
+                        <div class="bg-gradient-to-br from-pink-900 to-rose-800 rounded-2xl p-8 border border-pink-400 border-opacity-30 hover:border-opacity-50 transition h-full hover:shadow-2xl hover:shadow-pink-500/50">
+                            <div class="text-4xl mb-4">🎯</div>
+                            <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-pink-200 transition">Event Handling</h4>
+                            <p class="text-pink-200 mb-4">Master user interactions with clicks, input, focus, and custom events</p>
+                            <div class="text-pink-300 text-sm font-semibold">Topics: @click, @input, @focus, event modifiers →</div>
+                        </div>
+                    </a>
+
+                    <!-- Lists & Loops -->
+                    <a href="lists-and-loops.html" class="group">
+                        <div class="bg-gradient-to-br from-emerald-900 to-teal-800 rounded-2xl p-8 border border-emerald-400 border-opacity-30 hover:border-opacity-50 transition h-full hover:shadow-2xl hover:shadow-emerald-500/50">
+                            <div class="text-4xl mb-4">📋</div>
+                            <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-200 transition">Lists & Loops</h4>
+                            <p class="text-emerald-200 mb-4">Render dynamic lists with v-for and manage collections efficiently</p>
+                            <div class="text-emerald-300 text-sm font-semibold">Topics: v-for, keys, sorting, filtering →</div>
+                        </div>
+                    </a>
+
+                    <!-- Components & Props -->
+                    <a href="components-and-props.html" class="group">
+                        <div class="bg-gradient-to-br from-amber-900 to-orange-800 rounded-2xl p-8 border border-amber-400 border-opacity-30 hover:border-opacity-50 transition h-full hover:shadow-2xl hover:shadow-amber-500/50">
+                            <div class="text-4xl mb-4">🧩</div>
+                            <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-amber-200 transition">Components & Props</h4>
+                            <p class="text-amber-200 mb-4">Build reusable components and communicate between parent and child</p>
+                            <div class="text-amber-300 text-sm font-semibold">Topics: Props, emits, slots, component composition →</div>
+                        </div>
+                    </a>
+
+                    <!-- Practical Examples -->
+                    <a href="practical-examples.html" class="group">
+                        <div class="bg-gradient-to-br from-cyan-900 to-blue-800 rounded-2xl p-8 border border-cyan-400 border-opacity-30 hover:border-opacity-50 transition h-full hover:shadow-2xl hover:shadow-cyan-500/50">
+                            <div class="text-4xl mb-4">🛠️</div>
+                            <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-cyan-200 transition">Practical Examples</h4>
+                            <p class="text-cyan-200 mb-4">Real-world examples including forms, API calls, and local storage</p>
+                            <div class="text-cyan-300 text-sm font-semibold">Topics: Forms, validation, API, storage →</div>
+                        </div>
+                    </a>
+
+                    <!-- Code Playground -->
+                    <a href="playground.html" class="group">
+                        <div class="bg-gradient-to-br from-purple-900 to-indigo-800 rounded-2xl p-8 border border-purple-400 border-opacity-30 hover:border-opacity-50 transition h-full hover:shadow-2xl hover:shadow-purple-500/50">
+                            <div class="text-4xl mb-4">🎮</div>
+                            <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-purple-200 transition">Code Playground</h4>
+                            <p class="text-purple-200 mb-4">Experiment with Vue code in real-time and see instant results</p>
+                            <div class="text-purple-300 text-sm font-semibold">Topics: Live coding, templates, expressions →</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Featured Project -->
+            <div class="bg-gradient-to-br from-violet-900 via-purple-900 to-violet-900 rounded-2xl p-12 border border-violet-400 border-opacity-30 mb-16">
+                <div class="flex flex-col lg:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 class="text-4xl font-bold text-white mb-4">✨ Featured Project: Todo App</h3>
+                        <p class="text-purple-200 text-lg mb-6">A fully-featured todo application built with Vue.js that demonstrates real-world concepts including:</p>
+                        <ul class="text-purple-300 space-y-2 mb-8">
+                            <li>✓ Component-based architecture</li>
+                            <li>✓ State management and reactivity</li>
+                            <li>✓ Local storage persistence</li>
+                            <li>✓ Event handling and form validation</li>
+                            <li>✓ Dynamic list filtering and sorting</li>
+                            <li>✓ Smooth animations and transitions</li>
+                        </ul>
+                        <a href="todo.html" class="inline-block bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 px-8 rounded-lg transition transform hover:scale-105">Launch Todo App →</a>
+                    </div>
+                    <div class="flex-1 text-6xl text-center">
+                        📝
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-20 text-center">
+                    <div class="text-4xl font-bold text-purple-300 mb-2">6</div>
+                    <div class="text-white font-semibold">Learning Modules</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-20 text-center">
+                    <div class="text-4xl font-bold text-blue-300 mb-2">20+</div>
+                    <div class="text-white font-semibold">Interactive Examples</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-20 text-center">
+                    <div class="text-4xl font-bold text-pink-300 mb-2">1</div>
+                    <div class="text-white font-semibold">Complete Todo App</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-6 border border-white border-opacity-20 text-center">
+                    <div class="text-4xl font-bold text-emerald-300 mb-2">∞</div>
+                    <div class="text-white font-semibold">Learning Potential</div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="bg-white bg-opacity-5 backdrop-blur-md rounded-2xl p-8 border border-white border-opacity-10">
+                <h3 class="text-2xl font-bold text-white mb-6">💡 Learning Tips</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex gap-4">
+                        <span class="text-3xl">🎯</span>
+                        <div>
+                            <h4 class="text-white font-bold mb-2">Start with Basics</h4>
+                            <p class="text-gray-300">Begin with Vue Basics to understand data binding and reactive properties</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="text-3xl">🔄</span>
+                        <div>
+                            <h4 class="text-white font-bold mb-2">Explore Interactively</h4>
+                            <p class="text-gray-300">Use the Code Playground to experiment and test your understanding</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="text-3xl">📚</span>
+                        <div>
+                            <h4 class="text-white font-bold mb-2">Build Projects</h4>
+                            <p class="text-gray-300">Work through the Todo App to see how concepts come together</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="text-3xl">🚀</span>
+                        <div>
+                            <h4 class="text-white font-bold mb-2">Practice Often</h4>
+                            <p class="text-gray-300">Modify examples and create your own variations to solidify learning</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-black bg-opacity-40 backdrop-blur-md border-t border-purple-500 border-opacity-30 mt-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="text-center text-gray-400">
+                    <p class="mb-2">🎓 Vue.js Learning Hub</p>
+                    <p class="text-sm">Created for learning and mastering Vue.js fundamentals</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {};
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

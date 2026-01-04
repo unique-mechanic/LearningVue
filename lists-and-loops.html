@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js Lists & Loops</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 min-h-screen">
+    <a href="index.html" class="fixed top-4 left-4 text-emerald-300 hover:text-emerald-100 transition text-sm font-semibold z-50">← Back to Hub</a>
+    <div id="app" class="flex items-center justify-center min-h-screen px-4 py-8">
+        <div class="w-full max-w-5xl">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-white mb-2">Vue.js Lists & Loops</h1>
+                <p class="text-emerald-200">Learn v-for and list rendering</p>
+            </div>
+
+            <!-- Add New Assignment -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-emerald-300 border-opacity-20 mb-8">
+                <h2 class="text-2xl font-bold text-purple-800 mb-6">Add New Assignment</h2>
+                <div class="flex gap-4">
+                    <input 
+                        type="text"
+                        v-model="newAssignmentName"
+                        @keyup.enter="addAssignment"
+                        class="flex-1 px-4 py-3 rounded-lg bg-white bg-opacity-20 border-2 border-emerald-400 text-white placeholder-emerald-200 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-300 transition duration-300"
+                        placeholder="Enter assignment name..."
+                    >
+                    <button 
+                        @click="addAssignment"
+                        class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105"
+                    >
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- In Progress Assignments -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-emerald-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">📋 In Progress</h2>
+                    
+                    <div v-if="inProgressAssignments.length === 0" class="text-emerald-200 text-center py-8">
+                        <p>No assignments in progress! 🎉</p>
+                    </div>
+
+                    <ul v-else class="space-y-3">
+                        <!-- v-for loops through each assignment -->
+                        <li 
+                            v-for="(assignment, index) in inProgressAssignments" 
+                            :key="assignment.id"
+                            class="bg-emerald-500 bg-opacity-20 border border-emerald-400 rounded-lg p-4 hover:bg-opacity-30 transition duration-300"
+                        >
+                            <div class="flex items-center gap-3">
+                                <input 
+                                    type="checkbox" 
+                                    v-model="assignment.complete"
+                                    class="w-5 h-5 cursor-pointer"
+                                >
+                                <span class="text-emerald-100 flex-1">{{ assignment.name }}</span>
+                                <button 
+                                    @click="deleteAssignment(assignment.id)"
+                                    class="text-red-400 hover:text-red-300 text-sm"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            <p class="text-emerald-300 text-xs mt-2">ID: {{ assignment.id }} | Index: {{ index }}</p>
+                        </li>
+                    </ul>
+
+                    <p class="text-emerald-200 text-sm mt-6">Total: <span class="font-bold">{{ inProgressAssignments.length }}</span></p>
+                </div>
+
+                <!-- Completed Assignments -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-emerald-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">✅ Completed</h2>
+                    
+                    <div v-if="completedAssignments.length === 0" class="text-emerald-200 text-center py-8">
+                        <p>No completed assignments yet. Keep working! 💪</p>
+                    </div>
+
+                    <ul v-else class="space-y-3">
+                        <!-- v-for with completed assignments -->
+                        <li 
+                            v-for="(assignment, index) in completedAssignments" 
+                            :key="assignment.id"
+                            class="bg-green-500 bg-opacity-20 border border-green-400 rounded-lg p-4 hover:bg-opacity-30 transition duration-300 line-through opacity-75"
+                        >
+                            <div class="flex items-center gap-3">
+                                <input 
+                                    type="checkbox" 
+                                    v-model="assignment.complete"
+                                    class="w-5 h-5 cursor-pointer"
+                                >
+                                <span class="text-green-100 flex-1">{{ assignment.name }}</span>
+                                <button 
+                                    @click="deleteAssignment(assignment.id)"
+                                    class="text-red-400 hover:text-red-300 text-sm"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            <p class="text-green-300 text-xs mt-2">ID: {{ assignment.id }} | Index: {{ index }}</p>
+                        </li>
+                    </ul>
+
+                    <p class="text-emerald-200 text-sm mt-6">Total: <span class="font-bold">{{ completedAssignments.length }}</span></p>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-emerald-300 border-opacity-20 mt-8">
+                <h2 class="text-2xl font-bold text-purple-800 mb-6">📊 Statistics</h2>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-emerald-500 bg-opacity-20 border border-emerald-400 rounded-lg p-4 text-center">
+                        <p class="text-emerald-200 text-sm">Total Assignments</p>
+                        <p class="text-white text-3xl font-bold">{{ assignments.length }}</p>
+                    </div>
+                    <div class="bg-green-500 bg-opacity-20 border border-green-400 rounded-lg p-4 text-center">
+                        <p class="text-green-200 text-sm">Completed</p>
+                        <p class="text-white text-3xl font-bold">{{ completedAssignments.length }}</p>
+                    </div>
+                    <div class="bg-blue-500 bg-opacity-20 border border-blue-400 rounded-lg p-4 text-center">
+                        <p class="text-blue-200 text-sm">Progress</p>
+                        <p class="text-white text-3xl font-bold">{{ progressPercentage }}%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-emerald-300 border-opacity-20 mt-8">
+                <h3 class="text-xl font-bold text-white mb-4">v-for Concepts:</h3>
+                <ul class="text-emerald-100 space-y-2 text-sm">
+                    <li>✓ <span class="font-semibold">v-for="item in items"</span> - Loop through arrays</li>
+                    <li>✓ <span class="font-semibold">v-for="(item, index) in items"</span> - Access index in loop</li>
+                    <li>✓ <span class="font-semibold">:key</span> - Unique identifier for each item (important for Vue!)</li>
+                    <li>✓ <span class="font-semibold">v-if/v-else</span> - Show/hide based on conditions</li>
+                    <li>✓ <span class="font-semibold">Computed Properties</span> - Filter lists automatically</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let app = {
+        data(){
+            return {
+                assignments: [
+                    { name: 'Finish project', complete: false, id: 1 },
+                    { name: 'Read Chapter 4', complete: false, id: 2 },
+                    { name: 'Turn in Homework', complete: false, id: 3 },
+                ],
+                newAssignmentName: '',
+                nextId: 4
+            }
+        },
+
+        computed: {
+            inProgressAssignments(){
+                return this.assignments.filter(assignment => !assignment.complete);
+            },
+            completedAssignments(){
+                return this.assignments.filter(assignment => assignment.complete);
+            },
+            progressPercentage(){
+                if (this.assignments.length === 0) return 0;
+                return Math.round((this.completedAssignments.length / this.assignments.length) * 100);
+            }
+        },
+
+        methods: {
+            addAssignment(){
+                if (this.newAssignmentName.trim() === '') return;
+                
+                this.assignments.push({
+                    name: this.newAssignmentName,
+                    complete: false,
+                    id: this.nextId++
+                });
+                
+                this.newAssignmentName = '';
+            },
+            deleteAssignment(id){
+                this.assignments = this.assignments.filter(a => a.id !== id);
+            }
+        }
+    };
+
+    Vue.createApp(app).mount('#app');
+</script>
+</body>
+</html>
+

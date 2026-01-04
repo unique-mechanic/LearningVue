@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js Todo App</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen">
+    <div id="app" class="min-h-screen py-8 px-4">
+        <!-- Back to Home -->
+        <a href="index.html" class="inline-flex items-center gap-2 text-purple-300 hover:text-purple-100 transition mb-8">
+            <span>←</span>
+            <span>Back to Learning Hub</span>
+        </a>
+
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div class="text-6xl mb-4">📝</div>
+                <h1 class="text-5xl font-bold text-white mb-2">My Todos</h1>
+                <p class="text-slate-400">A complete todo app built with Vue.js</p>
+            </div>
+
+            <!-- Main Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Add Todo Card -->
+                <div class="lg:col-span-3 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-purple-400 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-white mb-6">Add New Todo</h2>
+                    
+                    <form @submit.prevent="addTodo" class="space-y-4">
+                        <div>
+                            <input 
+                                v-model="newTodo.title"
+                                type="text"
+                                placeholder="What needs to be done?"
+                                class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 border-2 border-purple-400 text-white placeholder-gray-300 focus:outline-none focus:border-purple-300 focus:bg-opacity-30 transition"
+                                @keyup.enter="addTodo"
+                            >
+                        </div>
+
+                        <div>
+                            <textarea 
+                                v-model="newTodo.description"
+                                placeholder="Add a description (optional)"
+                                rows="3"
+                                class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 border-2 border-purple-400 text-white placeholder-gray-300 focus:outline-none focus:border-purple-300 focus:bg-opacity-30 transition resize-none"
+                            ></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-white text-sm font-semibold mb-2 block">Priority</label>
+                                <select 
+                                    v-model="newTodo.priority"
+                                    class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 border-2 border-purple-400 text-white focus:outline-none focus:border-purple-300 transition"
+                                >
+                                    <option value="low" class="bg-slate-900">Low</option>
+                                    <option value="medium" class="bg-slate-900">Medium</option>
+                                    <option value="high" class="bg-slate-900">High</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-white text-sm font-semibold mb-2 block">Category</label>
+                                <select 
+                                    v-model="newTodo.category"
+                                    class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 border-2 border-purple-400 text-white focus:outline-none focus:border-purple-300 transition"
+                                >
+                                    <option value="work" class="bg-slate-900">Work</option>
+                                    <option value="personal" class="bg-slate-900">Personal</option>
+                                    <option value="shopping" class="bg-slate-900">Shopping</option>
+                                    <option value="health" class="bg-slate-900">Health</option>
+                                    <option value="other" class="bg-slate-900">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="submit"
+                            class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-105"
+                        >
+                            ➕ Add Todo
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Filters and Stats -->
+                <div class="lg:col-span-3 grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <!-- Filter Buttons -->
+                    <button 
+                        @click="filter = 'all'"
+                        :class="filter === 'all' ? 'bg-purple-600 text-white border-purple-400' : 'bg-white bg-opacity-10 text-gray-300 border-white border-opacity-20 hover:bg-opacity-20'"
+                        class="px-4 py-2 rounded-lg border transition"
+                    >
+                        All ({{ todos.length }})
+                    </button>
+                    <button 
+                        @click="filter = 'active'"
+                        :class="filter === 'active' ? 'bg-blue-600 text-white border-blue-400' : 'bg-white bg-opacity-10 text-gray-300 border-white border-opacity-20 hover:bg-opacity-20'"
+                        class="px-4 py-2 rounded-lg border transition"
+                    >
+                        Active ({{ activeTodos.length }})
+                    </button>
+                    <button 
+                        @click="filter = 'completed'"
+                        :class="filter === 'completed' ? 'bg-green-600 text-white border-green-400' : 'bg-white bg-opacity-10 text-gray-300 border-white border-opacity-20 hover:bg-opacity-20'"
+                        class="px-4 py-2 rounded-lg border transition"
+                    >
+                        Done ({{ completedTodos.length }})
+                    </button>
+                    <button 
+                        @click="filter = 'high'"
+                        :class="filter === 'high' ? 'bg-red-600 text-white border-red-400' : 'bg-white bg-opacity-10 text-gray-300 border-white border-opacity-20 hover:bg-opacity-20'"
+                        class="px-4 py-2 rounded-lg border transition text-sm"
+                    >
+                        High Priority
+                    </button>
+                    <button 
+                        v-if="completedTodos.length > 0"
+                        @click="clearCompleted"
+                        class="px-4 py-2 rounded-lg border bg-red-900 bg-opacity-40 text-red-200 border-red-600 hover:bg-opacity-60 transition text-sm"
+                    >
+                        Clear Done
+                    </button>
+                </div>
+
+                <!-- Todos List -->
+                <div class="lg:col-span-3">
+                    <!-- Sort Dropdown -->
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-white">
+                            {{ filteredTodos.length }} 
+                            {{ filteredTodos.length === 1 ? 'Todo' : 'Todos' }}
+                        </h3>
+                        <select 
+                            v-model="sortBy"
+                            class="px-3 py-2 rounded-lg bg-white bg-opacity-20 border border-purple-400 text-white text-sm focus:outline-none focus:border-purple-300 transition"
+                        >
+                            <option value="date" class="bg-slate-900">Newest First</option>
+                            <option value="priority" class="bg-slate-900">By Priority</option>
+                            <option value="title" class="bg-slate-900">Alphabetical</option>
+                        </select>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div v-if="filteredTodos.length === 0" class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-12 border border-purple-400 border-opacity-20 text-center">
+                        <div class="text-6xl mb-4">✨</div>
+                        <p class="text-gray-300 text-lg">{{ getEmptyMessage() }}</p>
+                    </div>
+
+                    <!-- Todo Items -->
+                    <div v-else class="space-y-3">
+                        <div 
+                            v-for="todo in filteredTodos" 
+                            :key="todo.id"
+                            class="bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-4 border border-purple-400 border-opacity-20 hover:border-opacity-40 transition group"
+                        >
+                            <div class="flex items-start gap-4">
+                                <!-- Checkbox -->
+                                <input 
+                                    type="checkbox"
+                                    v-model="todo.completed"
+                                    class="mt-1 w-5 h-5 rounded cursor-pointer accent-green-500"
+                                >
+
+                                <!-- Content -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h4 
+                                            :class="todo.completed ? 'line-through text-gray-400' : 'text-white'"
+                                            class="font-semibold text-lg"
+                                        >
+                                            {{ todo.title }}
+                                        </h4>
+                                        <span 
+                                            :class="{
+                                                'bg-red-600 bg-opacity-30 text-red-200': todo.priority === 'high',
+                                                'bg-yellow-600 bg-opacity-30 text-yellow-200': todo.priority === 'medium',
+                                                'bg-blue-600 bg-opacity-30 text-blue-200': todo.priority === 'low'
+                                            }"
+                                            class="px-3 py-1 rounded-full text-xs font-semibold capitalize"
+                                        >
+                                            {{ todo.priority }}
+                                        </span>
+                                        <span class="px-2 py-1 rounded-full text-xs font-semibold bg-purple-600 bg-opacity-40 text-purple-200 capitalize">
+                                            {{ todo.category }}
+                                        </span>
+                                        <span v-if="todo.completed" class="text-green-400 text-sm font-semibold">✓ Done</span>
+                                    </div>
+
+                                    <p v-if="todo.description" class="text-gray-300 text-sm mb-2">{{ todo.description }}</p>
+                                    <p class="text-gray-500 text-xs">Created {{ formatDate(todo.date) }}</p>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                                    <button 
+                                        @click="editTodo(todo)"
+                                        class="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                                        title="Edit"
+                                    >
+                                        ✏️
+                                    </button>
+                                    <button 
+                                        @click="deleteTodo(todo.id)"
+                                        class="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+                                        title="Delete"
+                                    >
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="lg:col-span-3 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-purple-400 border-opacity-20">
+                    <h3 class="text-2xl font-bold text-white mb-6">📊 Statistics</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-purple-300 mb-2">{{ todos.length }}</div>
+                            <div class="text-gray-300 text-sm">Total Todos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-300 mb-2">{{ activeTodos.length }}</div>
+                            <div class="text-gray-300 text-sm">Active</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-green-300 mb-2">{{ completedTodos.length }}</div>
+                            <div class="text-gray-300 text-sm">Completed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-yellow-300 mb-2">{{ completionPercentage }}%</div>
+                            <div class="text-gray-300 text-sm">Progress</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    todos: [],
+                    newTodo: {
+                        title: '',
+                        description: '',
+                        priority: 'medium',
+                        category: 'personal'
+                    },
+                    filter: 'all',
+                    sortBy: 'date',
+                    editingId: null
+                };
+            },
+            computed: {
+                filteredTodos() {
+                    let filtered = this.todos;
+
+                    // Apply filter
+                    if (this.filter === 'active') {
+                        filtered = filtered.filter(t => !t.completed);
+                    } else if (this.filter === 'completed') {
+                        filtered = filtered.filter(t => t.completed);
+                    } else if (this.filter === 'high') {
+                        filtered = filtered.filter(t => t.priority === 'high' && !t.completed);
+                    }
+
+                    // Apply sort
+                    if (this.sortBy === 'priority') {
+                        const priorityOrder = { high: 0, medium: 1, low: 2 };
+                        filtered.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+                    } else if (this.sortBy === 'title') {
+                        filtered.sort((a, b) => a.title.localeCompare(b.title));
+                    } else {
+                        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    }
+
+                    return filtered;
+                },
+                activeTodos() {
+                    return this.todos.filter(t => !t.completed);
+                },
+                completedTodos() {
+                    return this.todos.filter(t => t.completed);
+                },
+                completionPercentage() {
+                    if (this.todos.length === 0) return 0;
+                    return Math.round((this.completedTodos.length / this.todos.length) * 100);
+                }
+            },
+            methods: {
+                addTodo() {
+                    if (!this.newTodo.title.trim()) return;
+
+                    const todo = {
+                        id: Date.now(),
+                        title: this.newTodo.title,
+                        description: this.newTodo.description,
+                        priority: this.newTodo.priority,
+                        category: this.newTodo.category,
+                        completed: false,
+                        date: new Date().toISOString()
+                    };
+
+                    this.todos.unshift(todo);
+                    this.resetForm();
+                    this.saveTodos();
+                },
+                editTodo(todo) {
+                    this.newTodo = {
+                        title: todo.title,
+                        description: todo.description,
+                        priority: todo.priority,
+                        category: todo.category
+                    };
+                    this.editingId = todo.id;
+                    document.querySelector('input[placeholder="What needs to be done?"]').focus();
+                },
+                deleteTodo(id) {
+                    this.todos = this.todos.filter(t => t.id !== id);
+                    this.saveTodos();
+                },
+                clearCompleted() {
+                    if (confirm('Are you sure you want to delete all completed todos?')) {
+                        this.todos = this.todos.filter(t => !t.completed);
+                        this.saveTodos();
+                    }
+                },
+                resetForm() {
+                    this.newTodo = {
+                        title: '',
+                        description: '',
+                        priority: 'medium',
+                        category: 'personal'
+                    };
+                    this.editingId = null;
+                },
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const today = new Date();
+                    const yesterday = new Date(today);
+                    yesterday.setDate(yesterday.getDate() - 1);
+
+                    if (date.toDateString() === today.toDateString()) {
+                        return 'Today at ' + date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                    } else if (date.toDateString() === yesterday.toDateString()) {
+                        return 'Yesterday';
+                    } else {
+                        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }
+                },
+                getEmptyMessage() {
+                    if (this.filter === 'completed') return 'No completed todos yet. Keep going! 🚀';
+                    if (this.filter === 'active') return 'All caught up! Add a new todo to get started. ✨';
+                    if (this.filter === 'high') return 'No high priority todos. Take a break! 🎉';
+                    return 'No todos yet. Add one to get started! 📝';
+                },
+                saveTodos() {
+                    localStorage.setItem('vue_todos', JSON.stringify(this.todos));
+                },
+                loadTodos() {
+                    const saved = localStorage.getItem('vue_todos');
+                    if (saved) {
+                        this.todos = JSON.parse(saved);
+                    }
+                }
+            },
+            mounted() {
+                this.loadTodos();
+            },
+            watch: {
+                'newTodo.title': function() {
+                    if (this.editingId) {
+                        const todo = this.todos.find(t => t.id === this.editingId);
+                        if (todo) {
+                            todo.title = this.newTodo.title;
+                            todo.description = this.newTodo.description;
+                            todo.priority = this.newTodo.priority;
+                            todo.category = this.newTodo.category;
+                            this.saveTodos();
+                        }
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
