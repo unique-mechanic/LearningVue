@@ -1,9 +1,19 @@
 <template>
   <div class="py-8">
     <h2 class="text-4xl font-bold text-white mb-4">✅ Todo App</h2>
-    <p class="text-purple-200 mb-8">A complete Vue application with CRUD operations</p>
+    <p class="text-purple-200 mb-8">A complete Vue application with API integration</p>
     
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Error Message -->
+    <div v-if="error" class="bg-red-500 bg-opacity-20 border border-red-500 rounded-lg p-4 mb-6">
+      <p class="text-red-300">{{ error }}</p>
+    </div>
+    
+    <!-- Loading State -->
+    <div v-if="loading" class="text-center py-8">
+      <p class="text-purple-300">Loading...</p>
+    </div>
+    
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div class="lg:col-span-2">
         <div class="bg-purple-600 bg-opacity-10 border border-purple-500 border-opacity-30 rounded-lg p-8">
           <h3 class="text-2xl font-bold text-white mb-6">Manage Your Todos</h3>
@@ -15,12 +25,14 @@
               @keyup.enter="addTodo"
               class="flex-1 px-4 py-3 bg-slate-800 border border-slate-600 rounded text-white"
               placeholder="Add a new todo..."
+              :disabled="loading"
             />
             <button 
               @click="addTodo"
-              class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded transition"
+              :disabled="loading"
+              class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded transition disabled:opacity-50"
             >
-              Add
+              {{ loading ? 'Adding...' : 'Add' }}
             </button>
           </div>
 
@@ -113,16 +125,12 @@ export default {
   name: 'TodoApp',
   data() {
     return {
-      todos: [
-        { id: 1, text: 'Learn Vue.js', completed: true },
-        { id: 2, text: 'Build a todo app', completed: true },
-        { id: 3, text: 'Deploy to production', completed: false },
-        { id: 4, text: 'Learn backend development', completed: false },
-      ],
+      todos: [],
       newTodo: '',
       activeFilter: 'All',
       filterTabs: ['All', 'Active', 'Completed'],
-      nextId: 5
+      loading: false,
+      error: null
     }
   },
   computed: {
@@ -147,25 +155,94 @@ export default {
     }
   },
   methods: {
-    addTodo() {
-      if (this.newTodo.trim()) {
-        this.todos.push({
-          id: this.nextId++,
-          text: this.newTodo,
-          completed: false
+    async fetchTodos() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await fetch('/api/todos');
+        if (!response.ok) throw new Error('Failed to fetch todos');
+        this.todos = await response.json();
+      } catch (err) {
+        this.error = err.message;
+        console.error('Error fetching todos:', err);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async addTodo() {
+      if (!this.newTodo.trim()) return;
+      
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await fetch('/api/todos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+          },
+          body: JSON.stringify({
+            text: this.newTodo,
+            completed: false
+          })
         });
+        
+        if (!response.ok) throw new Error('Failed to add todo');
+        const newTodo = await response.json();
+        this.todos.unshift(newTodo);
         this.newTodo = '';
+      } catch (err) {
+        this.error = err.message;
+        console.error('Error adding todo:', err);
+      } finally {
+        this.loading = false;
       }
     },
-    toggleTodo(id) {
+    async toggleTodo(id) {
       const todo = this.todos.find(t => t.id === id);
-      if (todo) {
-        todo.completed = !todo.completed;
+      if (!todo) return;
+      
+      this.error = null;
+      try {
+        const response = await fetch(`/api/todos/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+          },
+          body: JSON.stringify({
+            completed: !todo.completed
+          })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update todo');
+        const updated = await response.json();
+        todo.completed = updated.completed;
+      } catch (err) {
+        this.error = err.message;
+        console.error('Error toggling todo:', err);
       }
     },
-    deleteTodo(id) {
-      this.todos = this.todos.filter(t => t.id !== id);
+    async deleteTodo(id) {
+      this.error = null;
+      try {
+        const response = await fetch(`/api/todos/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+          }
+        });
+        
+        if (!response.ok) throw new Error('Failed to delete todo');
+        this.todos = this.todos.filter(t => t.id !== id);
+      } catch (err) {
+        this.error = err.message;
+        console.error('Error deleting todo:', err);
+      }
     }
+  },
+  mounted() {
+    this.fetchTodos();
   }
 }
 </script>
