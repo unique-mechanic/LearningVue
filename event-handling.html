@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js Event Handling</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-900 via-indigo-900 to-blue-900 min-h-screen">
+    <a href="index.html" class="fixed top-4 left-4 text-indigo-300 hover:text-indigo-100 transition text-sm font-semibold z-50">← Back to Hub</a>
+    <div id="app" class="flex items-center justify-center min-h-screen px-4">
+        <div class="w-full max-w-4xl">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-white mb-2">Vue.js Event Handling</h1>
+                <p class="text-indigo-200">Learn how to handle user interactions</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Card 1: Click Events -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-indigo-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">1. Click Events</h2>
+                    
+                    <div class="space-y-4">
+                        <p class="text-indigo-400 mb-4">Button clicks: <span class="font-bold text-pink-300">{{ clickCount }}</span></p>
+                        
+                        <button 
+                            @click="clickCount++"
+                            class="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105"
+                        >
+                            Click Me!
+                        </button>
+
+                        <button 
+                            @click="resetClicks"
+                            class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
+                        >
+                            Reset Counter
+                        </button>
+
+                        <div v-if="clickCount > 5" class="bg-yellow-500 bg-opacity-20 border border-yellow-400 rounded-lg p-4 text-yellow-100 text-sm">
+                            🎉 You're on a clicking spree!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Toggle States -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-indigo-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">2. Toggle States</h2>
+                    
+                    <div class="space-y-4">
+                        <button 
+                            @click="toggle"
+                            :class="active ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-red-500 to-pink-500'"
+                            class="w-full text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105"
+                        >
+                            {{ active ? '✓ Status: ON' : '✗ Status: OFF' }}
+                        </button>
+
+                        <div v-if="active" class="bg-green-500 bg-opacity-20 border border-green-400 rounded-lg p-4 text-green-100">
+                            <p class="font-semibold">Status is Active! 🟢</p>
+                        </div>
+                        <div v-else class="bg-red-500 bg-opacity-20 border border-red-400 rounded-lg p-4 text-red-100">
+                            <p class="font-semibold">Status is Inactive! 🔴</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Input Events -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-indigo-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">3. Input Events</h2>
+                    
+                    <div class="space-y-4">
+                        <input 
+                            type="text"
+                            v-model="userInput"
+                            @input="onInputChange"
+                            @focus="onInputFocus = true"
+                            @blur="onInputFocus = false"
+                            :class="onInputFocus ? 'ring-2 ring-blue-400' : ''"
+                            class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 border-2 border-indigo-400 text-white placeholder-indigo-200 focus:outline-none focus:border-blue-400 transition duration-300"
+                            placeholder="Type something..."
+                        >
+                        
+                        <div class="bg-indigo-500 bg-opacity-20 border border-indigo-400 rounded-lg p-4">
+                            <p class="text-indigo-100 text-sm">
+                                <span class="font-bold">You typed:</span> {{ userInput }}
+                            </p>
+                            <p class="text-indigo-100 text-sm mt-2">
+                                <span class="font-bold">Input focused:</span> {{ onInputFocus ? '✓ Yes' : '✗ No' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Multiple Events -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-indigo-300 border-opacity-20">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-6">4. Multiple Events</h2>
+                    
+                    <div class="space-y-4">
+                        <button 
+                            @click="multiClick"
+                            @mouseenter="isHovering = true"
+                            @mouseleave="isHovering = false"
+                            @dblclick="resetMulti"
+                            :class="isHovering ? 'shadow-lg shadow-purple-500' : ''"
+                            class="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105"
+                        >
+                            Click or Hover (Double-click to reset)
+                        </button>
+
+                        <div class="bg-purple-500 bg-opacity-20 border border-purple-400 rounded-lg p-4 space-y-2">
+                            <p class="text-purple-100 text-sm">
+                                <span class="font-bold">Single Clicks:</span> {{ multiCount }}
+                            </p>
+                            <p class="text-purple-100 text-sm">
+                                <span class="font-bold">Hovering:</span> {{ isHovering ? '✓ Yes' : '✗ No' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="mt-12 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-indigo-300 border-opacity-20">
+                <h3 class="text-xl font-bold text-black mb-4">Event Handling Concepts:</h3>
+                <ul class="text-indigo-500 space-y-2 text-sm">
+                    <li>✓ <span class="font-semibold">@click</span> - Triggers when element is clicked</li>
+                    <li>✓ <span class="font-semibold">@input</span> - Triggers when input value changes</li>
+                    <li>✓ <span class="font-semibold">@focus/@blur</span> - Triggers when input gains/loses focus</li>
+                    <li>✓ <span class="font-semibold">@mouseenter/@mouseleave</span> - Triggers on mouse hover</li>
+                    <li>✓ <span class="font-semibold">@dblclick</span> - Triggers on double click</li>
+                    <li>✓ <span class="font-semibold">:class/:style</span> - Bind CSS classes/styles dynamically</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data(){
+                return {
+                    // Click event data
+                    clickCount: 0,
+                    
+                    // Toggle state
+                    active: false,
+                    
+                    // Input event data
+                    userInput: '',
+                    onInputFocus: false,
+                    
+                    // Multiple events data
+                    multiCount: 0,
+                    isHovering: false
+                };
+            },
+            methods: {
+                // Reset clicks counter
+                resetClicks() {
+                    this.clickCount = 0;
+                },
+                
+                // Toggle the active state
+                toggle() {
+                    this.active = !this.active;
+                },
+                
+                // Handle input change
+                onInputChange() {
+                    // This triggers whenever the input changes
+                    // v-model already updates userInput automatically
+                },
+                
+                // Handle multi-click
+                multiClick() {
+                    this.multiCount++;
+                },
+                
+                // Reset multi counter
+                resetMulti() {
+                    this.multiCount = 0;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
+
