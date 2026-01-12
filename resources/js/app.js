@@ -8,6 +8,7 @@ import VueBasics from './pages/VueBasics.vue';
 import EventHandling from './pages/EventHandling.vue';
 import ListsAndLoops from './pages/ListsAndLoops.vue';
 import ComponentsAndProps from './pages/ComponentsAndProps.vue';
+import Watchers from './pages/Watchers.vue';
 import TodoApp from './pages/TodoApp.vue';
 import Playground from './pages/Playground.vue';
 
@@ -18,6 +19,7 @@ const routes = [
   { path: '/event-handling', component: EventHandling, name: 'event-handling' },
   { path: '/lists-and-loops', component: ListsAndLoops, name: 'lists-and-loops' },
   { path: '/components-and-props', component: ComponentsAndProps, name: 'components-and-props' },
+  { path: '/watchers', component: Watchers, name: 'watchers' },
   { path: '/todo-app', component: TodoApp, name: 'todo-app' },
   { path: '/playground', component: Playground, name: 'playground' },
 ];

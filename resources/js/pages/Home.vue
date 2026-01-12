@@ -37,6 +37,13 @@
           </div>
         </router-link>
 
+        <router-link to="/watchers" class="learning-card">
+          <div class="bg-blue-600 bg-opacity-20 border border-blue-500 border-opacity-30 rounded-lg p-6 hover:bg-opacity-30 transition">
+            <h3 class="text-2xl font-bold text-white mb-2">👀 Watchers & Reactivity</h3>
+            <p class="text-blue-200">Watch data changes, deep watching, computed properties, and reactive updates</p>
+          </div>
+        </router-link>
+
         <router-link to="/todo-app" class="learning-card">
           <div class="bg-green-600 bg-opacity-20 border border-green-500 border-opacity-30 rounded-lg p-6 hover:bg-opacity-30 transition">
             <h3 class="text-2xl font-bold text-white mb-2">✅ Todo App</h3>
