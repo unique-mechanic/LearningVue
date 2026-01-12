@@ -44,6 +44,13 @@
           </div>
         </router-link>
 
+        <router-link to="/shadcn" class="learning-card">
+          <div class="bg-rose-600 bg-opacity-20 border border-rose-500 border-opacity-30 rounded-lg p-6 hover:bg-opacity-30 transition">
+            <h3 class="text-2xl font-bold text-white mb-2">🎨 ShadCN/ui</h3>
+            <p class="text-rose-200">Beautiful, accessible components built with Radix UI and Tailwind CSS</p>
+          </div>
+        </router-link>
+
         <router-link to="/todo-app" class="learning-card">
           <div class="bg-green-600 bg-opacity-20 border border-green-500 border-opacity-30 rounded-lg p-6 hover:bg-opacity-30 transition">
             <h3 class="text-2xl font-bold text-white mb-2">✅ Todo App</h3>
